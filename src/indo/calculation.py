@@ -76,19 +76,26 @@ class CalculationService:
             # Step 3: Calculate for each city
             results = []
             for _, row in df.iterrows():
+                
                 city = row['City']
+                if cities != ['all']:
+                    off_road_vehicle_percentage = entities.get(city).get('off_road_vehicle_percentage')/100
+                    station_utilization_percentage = entities.get(city).get('station_utilization_percentage') / 100.0
+                else:
+                    off_road_vehicle_percentage = entities.get('all').get('off_road_vehicle_percentage')/100
+                    station_utilization_percentage = entities.get('all').get('station_utilization_percentage') / 100.0
                 logger.info(f"Processing city: {city}")
                 
                 # Calculate total energy required for the city
                 total_energy_required = self._calculate_city_energy_demand(
-                    row, vehicle_specs, entities.get(city).get('off_road_vehicle_percentage') / 100.0
+                    row, vehicle_specs, off_road_vehicle_percentage
                 )
                 
             
                 # Calculate stations required
-                if swappable_energy_per_station > 0 and (entities.get(city).get('station_utilization_percentage') / 100.0) > 0:
+                if swappable_energy_per_station > 0 and (station_utilization_percentage) > 0:
                     stations_required = total_energy_required / (
-                        swappable_energy_per_station * (entities.get(city).get('station_utilization_percentage') / 100.0)
+                        swappable_energy_per_station * (station_utilization_percentage)
                     )
                 else:
                     stations_required = 0
@@ -99,7 +106,7 @@ class CalculationService:
                     "City": city,
                     "vehicles": row.to_dict(),
                     "total_vehicles": total_vehicles,
-                    "operational_vehicles": total_vehicles * (1 - entities.get(city).get('off_road_vehicle_percentage') / 100.0),
+                    "operational_vehicles": total_vehicles * (1 - off_road_vehicle_percentage),
                     "energy_required": round(total_energy_required, 2),
                     "swappable_energy_per_station": round(swappable_energy_per_station, 0),
                     "stations_required": round(stations_required, 0)
@@ -183,7 +190,7 @@ class CalculationService:
         df['City'] = df['City'].str.lower()
         
         # Filter cities if not 'all'
-        if len(cities)>0:
+        if cities!=['all']:
             print(f"Filtering cities: {cities}")
             df = df[df['City'].isin(cities)]
             if df.empty:
