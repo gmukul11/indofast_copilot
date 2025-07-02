@@ -16,14 +16,15 @@ logger = logging.getLogger(__name__)
 class CalculationService:
     """Service for calculating battery swap station requirements for EV fleet planning."""
     
-    def __init__(self, credentials_path):
+    def __init__(self, credentials_data):
         """Initialize the calculation service."""
         logger.info("Initializing CalculationService")
         # Authenticate with Google Sheets
-        self.gspread_client = self._google_sheets_auth(credentials_path)
+        self.credentials_data = credentials_data
+        self.gspread_client = self._google_sheets_auth(self.credentials_data)
      
     
-    def _google_sheets_auth(self, credentials_path: str) -> gspread.Client:
+    def _google_sheets_auth(self, credentials_data: str) -> gspread.Client:
         """
         Authenticate with Google Sheets using service account credentials.
         
@@ -38,8 +39,7 @@ class CalculationService:
                 "https://spreadsheets.google.com/feeds",
                 "https://www.googleapis.com/auth/drive"
             ]
-            credentials_file = open(credentials_path, 'r')
-            credentials_data = json.load(credentials_file)
+            
             creds = Credentials.from_service_account_info(
                 credentials_data,
                 scopes=scope
@@ -282,8 +282,9 @@ class CalculationService:
 
 # Example usage:
 if __name__ == "__main__":
-    from config import GOOGLE_CONFIG_FILE_PATH, SHEET_URL
-    service = CalculationService(GOOGLE_CONFIG_FILE_PATH)
+    from config import SHEET_URL, CREDENTIALS_DATA
+    # print(f"credentials_data: {CREDENTIALS_DATA}")
+    service = CalculationService(CREDENTIALS_DATA)
     result = service.calculate_swap_stations(
         entities={
             "delhi": {

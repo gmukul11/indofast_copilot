@@ -21,3 +21,7 @@ dist/
 .idea/
 .vscode/
 .github/
+.streamlit/
+# Ignore secrets files
+.secrets.toml
+# Ignore data files

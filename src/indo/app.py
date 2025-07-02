@@ -9,7 +9,17 @@ from calculation import CalculationService
 from prompts import GREETING_PROMPT, NEGATIVE_FEEDBACK_PROMPT, IRREVELANT_PROMPT, ENTITY_EXTRACTOR_PROMPT, INTENT_PROMPT, INTENT_RESPONSE_FORMAT, ENTITY_EXTRACTOR_RESPONSE_FORMAT, DATA_SUMMARY_PROMPT, USER_CONFIRMATION_STATE_PROMPT, USER_CONFIRMATION_STATE_RESPONSE_FORMAT 
 from auth import check_authentication, show_login_page, add_logout_button
 
-from config import SHEET_URL, PAGE_CONFIG, OPENAI_API_KEY, OPENAI_MODEL, LOGGING_CONFIG, GOOGLE_CONFIG_FILE_PATH
+from config import SHEET_URL, OPENAI_API_KEY, CREDENTIALS_DATA
+
+LOGGING_CONFIG = {
+    'level': logging.INFO,
+    'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    'handlers': [
+        logging.FileHandler('indofast_copilot.log'),
+        logging.StreamHandler()
+    ]
+}
+
 
 logging.basicConfig(**LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
@@ -23,14 +33,6 @@ PAGE_CONFIG = {
     'initial_sidebar_state': "expanded"
 }
 
-LOGGING_CONFIG = {
-    'level': logging.INFO,
-    'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    'handlers': [
-        logging.FileHandler('indofast_copilot.log'),
-        logging.StreamHandler()
-    ]
-}
 
 
 st.set_page_config(**PAGE_CONFIG)
@@ -114,7 +116,7 @@ if __name__ == "__main__":
         show_login_page()
         st.stop()
     
-    service = CalculationService(GOOGLE_CONFIG_FILE_PATH)
+    service = CalculationService(CREDENTIALS_DATA)
     
     # Create sidebar with logout button
     create_sidebar()
