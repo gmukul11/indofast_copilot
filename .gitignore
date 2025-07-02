@@ -11,7 +11,7 @@ venv/
 # Ignore log files
 *.log
 # Ignore configuration files
-config.py
+
 # Ignore coverage reports
 coverage.xml
 # Ignore build directories
