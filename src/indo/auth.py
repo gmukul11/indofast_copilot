@@ -89,10 +89,10 @@ def add_logout_button():
             st.rerun()
         
         # Show current user info
-        if st.session_state.get('auth_token'):
-            token_preview = st.session_state.auth_token[:8] + "..." if len(st.session_state.auth_token) > 8 else st.session_state.auth_token
-            st.markdown(f"👤 **Logged in as:** `{token_preview}`")
+        # if st.session_state.get('auth_token'):
+        #     token_preview = st.session_state.auth_token[:8] + "..." if len(st.session_state.auth_token) > 8 else st.session_state.auth_token
+        #     st.markdown(f"👤 **Logged in as:** `{token_preview}`")
             
-            if 'auth_time' in st.session_state:
-                auth_duration = int(time.time() - st.session_state.auth_time)
-                st.markdown(f"⏱️ **Session time:** {auth_duration//60}m {auth_duration%60}s")
+        #     if 'auth_time' in st.session_state:
+        #         auth_duration = int(time.time() - st.session_state.auth_time)
+        #         st.markdown(f"⏱️ **Session time:** {auth_duration//60}m {auth_duration%60}s")
